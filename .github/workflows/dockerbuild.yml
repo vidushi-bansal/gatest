@@ -26,8 +26,8 @@ jobs:
       - name: Build and Tag Docker Image
         run: |
           git fetch --prune --unshallow
-          dev=$(git diff --name-only  ${{ github.head_ref }} origin/main -- 'dev/')
-          prod=$(git diff --name-only ${{ github.head_ref }} origin/main -- 'prod/')
+          dev=$(git diff --name-only  origin/${{ github.head_ref }} origin/main -- 'dev/')
+          prod=$(git diff --name-only origin/${{ github.head_ref }} origin/main -- 'prod/')
           if [ -n "$prod"]; then
             docker build -t "${{ secrets.DOCKER_USERNAME }}"/prod-image:latest ./prod
             docker push "${{ secrets.DOCKER_USERNAME }}"/prod-image:latest
