@@ -25,6 +25,7 @@ jobs:
 
       - name: Build and Tag Docker Image
         run: |
+          git fetch --prune --unshallow
           dev=$(git diff --name-only  ${{ github.head_ref }} origin/main -- 'dev/')
           prod=$(git diff --name-only ${{ github.head_ref }} origin/main -- 'prod/')
           if [ -n "$prod"]; then
