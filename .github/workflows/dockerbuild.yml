@@ -4,8 +4,8 @@ on:
   pull_request:
     types: [closed]
     paths:
-      - 'prod/src/**'
-      - 'dev/src/**'
+      - 'prod/**'
+      - 'dev/**'
 
 jobs:
   build-prod:
