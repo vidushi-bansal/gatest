@@ -1,5 +1,2 @@
-From Ubuntu
+FROM ubuntu
 
-WORKDIR code
-
-COPY src . 
