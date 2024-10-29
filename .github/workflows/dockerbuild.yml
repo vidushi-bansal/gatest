@@ -3,10 +3,13 @@ name: Conditional Docker Build on PR Merge
 on:
   pull_request:
     types: [closed]
+    paths:
+      - 'prod/src/**'
+      - 'dev/src/**'
 
 jobs:
   build-prod:
-    if: github.event.pull_request.merged == true && contains(github.event.pull_request.head.repo.default_branch, 'prod/')
+    if: github.event.pull_request.merged == true && github.event.pull_request.base.ref == 'main'
     runs-on: ubuntu-latest
     name: Build Docker Image for Prod
 
@@ -22,11 +25,12 @@ jobs:
            echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
 
       - name: Build and Tag Prod Docker Image
+        if: "contains(github.event.pull_request.head.repo.default_branch, 'prod/')"
         run: |
           docker build -t "${{ secrets.DOCKER_USERNAME }}"/prod-image:latest ./prod
           docker push "${{ secrets.DOCKER_USERNAME }}"/prod-image:latest
   build-dev:
-    if: github.event.pull_request.merged == true && contains(github.event.pull_request.head.repo.default_branch, 'dev/')
+    if: github.event.pull_request.merged == true && github.event.pull_request.base.ref == 'main'
     runs-on: ubuntu-latest
     name: Build Docker Image for Dev
 
@@ -43,5 +47,6 @@ jobs:
 
       - name: Build and Tag Dev Docker Image
         run: |
+          if: "contains(github.event.pull_request.head.repo.default_branch, 'dev/')"
           docker build -t "${{ secrets.DOCKER_USERNAME }}"/dev-image:latest ./dev
           docker push "${{ secrets.DOCKER_USERNAME }}"/dev-image:latest 
